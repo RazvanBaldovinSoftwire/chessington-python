@@ -55,14 +55,17 @@ class Pawn(Piece):
 				available_moves.append(two_squares_in_front)
 
 			attack_left = Square.at(current_square.row - 1, current_square.col - 1)
-			if (self.is_position_on_board(attack_left)
-					and board.get_piece(attack_left) is Player.WHITE):
-				available_moves.append(attack_left)
+
+			if self.is_position_on_board(attack_left):
+				piece_attacked = board.get_piece(attack_left)
+				if piece_attacked is not None and piece_attacked.player is Player.WHITE:
+					available_moves.append(attack_left)
 
 			attack_right = Square.at(current_square.row - 1, current_square.col + 1)
-			if (self.is_position_on_board(attack_right)
-					and board.get_piece(attack_right) is Player.WHITE):
-				available_moves.append(attack_right)
+			if self.is_position_on_board(attack_right):
+				piece_attacked = board.get_piece(attack_right)
+				if piece_attacked is not None and piece_attacked.player is Player.WHITE:
+					available_moves.append(attack_right)
 
 		else:
 			square_in_front = Square.at(current_square.row + 1, current_square.col)
@@ -77,14 +80,16 @@ class Pawn(Piece):
 				available_moves.append(two_squares_in_front)
 
 			attack_left = Square.at(current_square.row + 1, current_square.col - 1)
-			if (self.is_position_on_board(attack_left)
-					and board.get_piece(attack_left) is Player.BLACK):
-				available_moves.append(attack_left)
+			if self.is_position_on_board(attack_left):
+				piece_attacked = board.get_piece(attack_left)
+				if piece_attacked is not None and piece_attacked.player is Player.BLACK:
+					available_moves.append(attack_left)
 
 			attack_right = Square.at(current_square.row + 1, current_square.col + 1)
-			if (self.is_position_on_board(attack_right)
-					and board.get_piece(attack_right) is Player.BLACK):
-				available_moves.append(attack_right)
+			if self.is_position_on_board(attack_right):
+				piece_attacked = board.get_piece(attack_right)
+				if piece_attacked is not None and piece_attacked.player is Player.BLACK:
+					available_moves.append(attack_right)
 
 		return available_moves
 
