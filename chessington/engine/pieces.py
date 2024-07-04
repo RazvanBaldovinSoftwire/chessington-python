@@ -29,6 +29,9 @@ class Piece(ABC):
 		current_square = board.find_piece(self)
 		board.move_piece(current_square, new_square)
 
+	def is_position_on_board(self, new_square: Square) -> bool:
+		return 0 <= new_square.row < 8 and 0 <= new_square.col < 8
+
 
 class Pawn(Piece):
 	"""
@@ -41,40 +44,46 @@ class Pawn(Piece):
 
 		if self.player == Player.BLACK:
 			square_in_front = Square.at(current_square.row - 1, current_square.col)
-			if board.get_piece(square_in_front) is None:
+			if (self.is_position_on_board(square_in_front)
+					and board.get_piece(square_in_front) is None):
 				available_moves.append(square_in_front)
 
 			two_squares_in_front = Square.at(current_square.row - 2, current_square.col)
-			if (board.get_piece(square_in_front) is None
+			if (current_square.row == 6
 					and board.get_piece(two_squares_in_front) is None
-					and current_square.row == 6):
+					and board.get_piece(square_in_front) is None):
 				available_moves.append(two_squares_in_front)
 
 			attack_left = Square.at(current_square.row - 1, current_square.col - 1)
-			if board.get_piece(attack_left) is Player.WHITE:
+			if (self.is_position_on_board(attack_left)
+					and board.get_piece(attack_left) is Player.WHITE):
 				available_moves.append(attack_left)
 
 			attack_right = Square.at(current_square.row - 1, current_square.col + 1)
-			if board.get_piece(attack_right) is Player.WHITE:
+			if (self.is_position_on_board(attack_right)
+					and board.get_piece(attack_right) is Player.WHITE):
 				available_moves.append(attack_right)
 
 		else:
 			square_in_front = Square.at(current_square.row + 1, current_square.col)
-			if board.get_piece(square_in_front) is None:
+			if (self.is_position_on_board(square_in_front)
+					and board.get_piece(square_in_front) is None):
 				available_moves.append(square_in_front)
 
 			two_squares_in_front = Square.at(current_square.row + 2, current_square.col)
-			if (board.get_piece(square_in_front) is None
+			if (current_square.row == 1
 					and board.get_piece(two_squares_in_front) is None
-					and current_square.row == 1):
+					and board.get_piece(square_in_front) is None):
 				available_moves.append(two_squares_in_front)
 
 			attack_left = Square.at(current_square.row + 1, current_square.col - 1)
-			if board.get_piece(attack_left) is Player.BLACK:
+			if (self.is_position_on_board(attack_left)
+					and board.get_piece(attack_left) is Player.BLACK):
 				available_moves.append(attack_left)
 
 			attack_right = Square.at(current_square.row + 1, current_square.col + 1)
-			if board.get_piece(attack_right) is Player.BLACK:
+			if (self.is_position_on_board(attack_right)
+					and board.get_piece(attack_right) is Player.BLACK):
 				available_moves.append(attack_right)
 
 		return available_moves
