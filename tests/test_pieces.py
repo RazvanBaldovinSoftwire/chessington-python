@@ -1,6 +1,6 @@
 from chessington.engine.board import Board
 from chessington.engine.data import Player, Square
-from chessington.engine.pieces import Pawn, Knight
+from chessington.engine.pieces import Pawn, Knight, Bishop
 
 
 class TestPawns:
@@ -735,3 +735,215 @@ class TestPawns:
         assert Square.at(3, 3) not in moves
         assert Square.at(4, 3) not in moves
         assert Square.at(4, 5) not in moves
+
+    @staticmethod
+    def test_white_bishop_all_moves():
+        # Arrange
+        board = Board.empty()
+        bishop = Bishop(Player.WHITE)
+        bishop_square = Square.at(3, 4)
+        board.set_piece(bishop_square, bishop)
+
+        # Act
+        moves = bishop.get_available_moves(board)
+
+        # Assert
+        assert Square.at(2, 3) in moves
+        assert Square.at(1, 2) in moves
+        assert Square.at(0, 1) in moves
+        assert Square.at(2, 5) in moves
+        assert Square.at(1, 6) in moves
+        assert Square.at(0, 7) in moves
+        assert Square.at(4, 3) in moves
+        assert Square.at(5, 2) in moves
+        assert Square.at(6, 1) in moves
+        assert Square.at(7, 0) in moves
+        assert Square.at(4, 5) in moves
+        assert Square.at(5, 6) in moves
+        assert Square.at(6, 7) in moves
+
+    @staticmethod
+    def test_black_bishop_all_moves():
+        # Arrange
+        board = Board.empty()
+        bishop = Bishop(Player.BLACK)
+        bishop_square = Square.at(3, 4)
+        board.set_piece(bishop_square, bishop)
+
+        # Act
+        moves = bishop.get_available_moves(board)
+
+        # Assert
+        assert Square.at(2, 3) in moves
+        assert Square.at(1, 2) in moves
+        assert Square.at(0, 1) in moves
+        assert Square.at(2, 5) in moves
+        assert Square.at(1, 6) in moves
+        assert Square.at(0, 7) in moves
+        assert Square.at(4, 3) in moves
+        assert Square.at(5, 2) in moves
+        assert Square.at(6, 1) in moves
+        assert Square.at(7, 0) in moves
+        assert Square.at(4, 5) in moves
+        assert Square.at(5, 6) in moves
+        assert Square.at(6, 7) in moves
+
+    @staticmethod
+    def test_white_bishop_capture_enemy():
+        # Arrange
+        board = Board.empty()
+        bishop = Bishop(Player.WHITE)
+        bishop_square = Square.at(3, 4)
+        board.set_piece(bishop_square, bishop)
+
+        enemy = Pawn(Player.BLACK)
+
+        enemy_square1 = Square.at(2, 3)
+        board.set_piece(enemy_square1, enemy)
+
+        enemy_square2 = Square.at(1, 6)
+        board.set_piece(enemy_square2, enemy)
+
+        enemy_square3 = Square.at(7, 0)
+        board.set_piece(enemy_square3, enemy)
+
+        enemy_square4 = Square.at(5, 6)
+        board.set_piece(enemy_square4, enemy)
+
+        # Act
+        moves = bishop.get_available_moves(board)
+
+        # Assert
+        assert Square.at(2, 3) in moves
+        assert Square.at(1, 2) not in moves
+        assert Square.at(0, 1) not in moves
+        assert Square.at(2, 5) in moves
+        assert Square.at(1, 6) in moves
+        assert Square.at(0, 7) not in moves
+        assert Square.at(4, 3) in moves
+        assert Square.at(5, 2) in moves
+        assert Square.at(6, 1) in moves
+        assert Square.at(7, 0) in moves
+        assert Square.at(4, 5) in moves
+        assert Square.at(5, 6) in moves
+        assert Square.at(6, 7) not in moves
+
+    @staticmethod
+    def test_black_bishop_capture_enemy():
+        # Arrange
+        board = Board.empty()
+        bishop = Bishop(Player.BLACK)
+        bishop_square = Square.at(3, 4)
+        board.set_piece(bishop_square, bishop)
+
+        enemy = Pawn(Player.WHITE)
+
+        enemy_square1 = Square.at(2, 3)
+        board.set_piece(enemy_square1, enemy)
+
+        enemy_square2 = Square.at(1, 6)
+        board.set_piece(enemy_square2, enemy)
+
+        enemy_square3 = Square.at(7, 0)
+        board.set_piece(enemy_square3, enemy)
+
+        enemy_square4 = Square.at(5, 6)
+        board.set_piece(enemy_square4, enemy)
+
+        # Act
+        moves = bishop.get_available_moves(board)
+
+        # Assert
+        assert Square.at(2, 3) in moves
+        assert Square.at(1, 2) not in moves
+        assert Square.at(0, 1) not in moves
+        assert Square.at(2, 5) in moves
+        assert Square.at(1, 6) in moves
+        assert Square.at(0, 7) not in moves
+        assert Square.at(4, 3) in moves
+        assert Square.at(5, 2) in moves
+        assert Square.at(6, 1) in moves
+        assert Square.at(7, 0) in moves
+        assert Square.at(4, 5) in moves
+        assert Square.at(5, 6) in moves
+        assert Square.at(6, 7) not in moves
+
+    @staticmethod
+    def test_white_bishop_doesnt_capture_friendly():
+        # Arrange
+        board = Board.empty()
+        bishop = Bishop(Player.WHITE)
+        bishop_square = Square.at(3, 4)
+        board.set_piece(bishop_square, bishop)
+
+        friendly = Pawn(Player.WHITE)
+
+        friendly_square1 = Square.at(2, 3)
+        board.set_piece(friendly_square1, friendly)
+
+        friendly_square2 = Square.at(1, 6)
+        board.set_piece(friendly_square2, friendly)
+
+        friendly_square3 = Square.at(7, 0)
+        board.set_piece(friendly_square3, friendly)
+
+        friendly_square4 = Square.at(5, 6)
+        board.set_piece(friendly_square4, friendly)
+
+        # Act
+        moves = bishop.get_available_moves(board)
+
+        # Assert
+        assert Square.at(2, 3) not in moves
+        assert Square.at(1, 2) not in moves
+        assert Square.at(0, 1) not in moves
+        assert Square.at(2, 5) in moves
+        assert Square.at(1, 6) not in moves
+        assert Square.at(0, 7) not in moves
+        assert Square.at(4, 3) in moves
+        assert Square.at(5, 2) in moves
+        assert Square.at(6, 1) in moves
+        assert Square.at(7, 0) not in moves
+        assert Square.at(4, 5) in moves
+        assert Square.at(5, 6) not in moves
+        assert Square.at(6, 7) not in moves
+
+    @staticmethod
+    def test_black_bishop_doesnt_capture_friendly():
+        # Arrange
+        board = Board.empty()
+        bishop = Bishop(Player.BLACK)
+        bishop_square = Square.at(3, 4)
+        board.set_piece(bishop_square, bishop)
+
+        friendly = Pawn(Player.BLACK)
+
+        friendly_square1 = Square.at(2, 3)
+        board.set_piece(friendly_square1, friendly)
+
+        friendly_square2 = Square.at(1, 6)
+        board.set_piece(friendly_square2, friendly)
+
+        friendly_square3 = Square.at(7, 0)
+        board.set_piece(friendly_square3, friendly)
+
+        friendly_square4 = Square.at(5, 6)
+        board.set_piece(friendly_square4, friendly)
+
+        # Act
+        moves = bishop.get_available_moves(board)
+
+        # Assert
+        assert Square.at(2, 3) not in moves
+        assert Square.at(1, 2) not in moves
+        assert Square.at(0, 1) not in moves
+        assert Square.at(2, 5) in moves
+        assert Square.at(1, 6) not in moves
+        assert Square.at(0, 7) not in moves
+        assert Square.at(4, 3) in moves
+        assert Square.at(5, 2) in moves
+        assert Square.at(6, 1) in moves
+        assert Square.at(7, 0) not in moves
+        assert Square.at(4, 5) in moves
+        assert Square.at(5, 6) not in moves
+        assert Square.at(6, 7) not in moves
