@@ -1,6 +1,6 @@
 from chessington.engine.board import Board
 from chessington.engine.data import Player, Square
-from chessington.engine.pieces import Pawn, Knight, Bishop
+from chessington.engine.pieces import Pawn, Knight, Bishop, Rook
 
 
 class TestPawns:
@@ -947,3 +947,221 @@ class TestPawns:
         assert Square.at(4, 5) in moves
         assert Square.at(5, 6) not in moves
         assert Square.at(6, 7) not in moves
+
+    @staticmethod
+    def test_white_rook_all_moves():
+        # Arrange
+        board = Board.empty()
+        rook = Rook(Player.WHITE)
+        rook_square = Square.at(3, 4)
+        board.set_piece(rook_square, rook)
+
+        # Act
+        moves = rook.get_available_moves(board)
+
+        # Assert
+        assert Square.at(7, 4) in moves
+        assert Square.at(6, 4) in moves
+        assert Square.at(5, 4) in moves
+        assert Square.at(4, 4) in moves
+        assert Square.at(2, 4) in moves
+        assert Square.at(1, 4) in moves
+        assert Square.at(0, 4) in moves
+        assert Square.at(3, 7) in moves
+        assert Square.at(3, 6) in moves
+        assert Square.at(3, 5) in moves
+        assert Square.at(3, 3) in moves
+        assert Square.at(3, 2) in moves
+        assert Square.at(3, 1) in moves
+        assert Square.at(3, 0) in moves
+
+    @staticmethod
+    def test_black_rook_all_moves():
+        # Arrange
+        board = Board.empty()
+        rook = Rook(Player.BLACK)
+        rook_square = Square.at(3, 4)
+        board.set_piece(rook_square, rook)
+
+        # Act
+        moves = rook.get_available_moves(board)
+
+        # Assert
+        assert Square.at(7, 4) in moves
+        assert Square.at(6, 4) in moves
+        assert Square.at(5, 4) in moves
+        assert Square.at(4, 4) in moves
+        assert Square.at(2, 4) in moves
+        assert Square.at(1, 4) in moves
+        assert Square.at(0, 4) in moves
+        assert Square.at(3, 7) in moves
+        assert Square.at(3, 6) in moves
+        assert Square.at(3, 5) in moves
+        assert Square.at(3, 3) in moves
+        assert Square.at(3, 2) in moves
+        assert Square.at(3, 1) in moves
+        assert Square.at(3, 0) in moves
+
+    @staticmethod
+    def test_white_rook_capture_enemy():
+        # Arrange
+        board = Board.empty()
+        rook = Rook(Player.WHITE)
+        rook_square = Square.at(3, 4)
+        board.set_piece(rook_square, rook)
+
+        enemy = Pawn(Player.BLACK)
+
+        enemy_square1 = Square.at(3, 2)
+        board.set_piece(enemy_square1, enemy)
+
+        enemy_square2 = Square.at(3,  7)
+        board.set_piece(enemy_square2, enemy)
+
+        enemy_square3 = Square.at(2, 4)
+        board.set_piece(enemy_square3, enemy)
+
+        enemy_square4 = Square.at(6, 4)
+        board.set_piece(enemy_square4, enemy)
+
+        # Act
+        moves = rook.get_available_moves(board)
+
+        # Assert
+        assert Square.at(7, 4) not in moves
+        assert Square.at(6, 4) in moves
+        assert Square.at(5, 4) in moves
+        assert Square.at(4, 4) in moves
+        assert Square.at(2, 4) in moves
+        assert Square.at(1, 4) not in moves
+        assert Square.at(0, 4) not in moves
+        assert Square.at(3, 7) in moves
+        assert Square.at(3, 6) in moves
+        assert Square.at(3, 5) in moves
+        assert Square.at(3, 3) in moves
+        assert Square.at(3, 2) in moves
+        assert Square.at(3, 1) not in moves
+        assert Square.at(3, 0) not in moves
+
+    @staticmethod
+    def test_black_rook_capture_enemy():
+        # Arrange
+        board = Board.empty()
+        rook = Rook(Player.BLACK)
+        rook_square = Square.at(3, 4)
+        board.set_piece(rook_square, rook)
+
+        enemy = Pawn(Player.WHITE)
+
+        enemy_square1 = Square.at(3, 2)
+        board.set_piece(enemy_square1, enemy)
+
+        enemy_square2 = Square.at(3, 7)
+        board.set_piece(enemy_square2, enemy)
+
+        enemy_square3 = Square.at(2, 4)
+        board.set_piece(enemy_square3, enemy)
+
+        enemy_square4 = Square.at(6, 4)
+        board.set_piece(enemy_square4, enemy)
+
+        # Act
+        moves = rook.get_available_moves(board)
+
+        # Assert
+        assert Square.at(7, 4) not in moves
+        assert Square.at(6, 4) in moves
+        assert Square.at(5, 4) in moves
+        assert Square.at(4, 4) in moves
+        assert Square.at(2, 4) in moves
+        assert Square.at(1, 4) not in moves
+        assert Square.at(0, 4) not in moves
+        assert Square.at(3, 7) in moves
+        assert Square.at(3, 6) in moves
+        assert Square.at(3, 5) in moves
+        assert Square.at(3, 3) in moves
+        assert Square.at(3, 2) in moves
+        assert Square.at(3, 1) not in moves
+        assert Square.at(3, 0) not in moves
+
+    @staticmethod
+    def test_white_rook_doesnt_capture_friendly():
+        # Arrange
+        board = Board.empty()
+        rook = Rook(Player.WHITE)
+        rook_square = Square.at(3, 4)
+        board.set_piece(rook_square, rook)
+
+        friendly = Pawn(Player.WHITE)
+
+        friendly_square1 = Square.at(3, 2)
+        board.set_piece(friendly_square1, friendly)
+
+        friendly_square2 = Square.at(3, 7)
+        board.set_piece(friendly_square2, friendly)
+
+        friendly_square3 = Square.at(2, 4)
+        board.set_piece(friendly_square3, friendly)
+
+        friendly_square4 = Square.at(6, 4)
+        board.set_piece(friendly_square4, friendly)
+
+        # Act
+        moves = rook.get_available_moves(board)
+
+        # Assert
+        assert Square.at(7, 4) not in moves
+        assert Square.at(6, 4) not in moves
+        assert Square.at(5, 4) in moves
+        assert Square.at(4, 4) in moves
+        assert Square.at(2, 4) not in moves
+        assert Square.at(1, 4) not in moves
+        assert Square.at(0, 4) not in moves
+        assert Square.at(3, 7) not in moves
+        assert Square.at(3, 6) in moves
+        assert Square.at(3, 5) in moves
+        assert Square.at(3, 3) in moves
+        assert Square.at(3, 2) not in moves
+        assert Square.at(3, 1) not in moves
+        assert Square.at(3, 0) not in moves
+
+    @staticmethod
+    def test_black_rook_doesnt_capture_friendly():
+        # Arrange
+        board = Board.empty()
+        rook = Rook(Player.BLACK)
+        rook_square = Square.at(3, 4)
+        board.set_piece(rook_square, rook)
+
+        friendly = Pawn(Player.BLACK)
+
+        friendly_square1 = Square.at(3, 2)
+        board.set_piece(friendly_square1, friendly)
+
+        friendly_square2 = Square.at(3, 7)
+        board.set_piece(friendly_square2, friendly)
+
+        friendly_square3 = Square.at(2, 4)
+        board.set_piece(friendly_square3, friendly)
+
+        friendly_square4 = Square.at(6, 4)
+        board.set_piece(friendly_square4, friendly)
+
+        # Act
+        moves = rook.get_available_moves(board)
+
+        # Assert
+        assert Square.at(7, 4) not in moves
+        assert Square.at(6, 4) not in moves
+        assert Square.at(5, 4) in moves
+        assert Square.at(4, 4) in moves
+        assert Square.at(2, 4) not in moves
+        assert Square.at(1, 4) not in moves
+        assert Square.at(0, 4) not in moves
+        assert Square.at(3, 7) not in moves
+        assert Square.at(3, 6) in moves
+        assert Square.at(3, 5) in moves
+        assert Square.at(3, 3) in moves
+        assert Square.at(3, 2) not in moves
+        assert Square.at(3, 1) not in moves
+        assert Square.at(3, 0) not in moves
