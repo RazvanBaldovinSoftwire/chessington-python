@@ -189,7 +189,32 @@ class Queen(Piece):
     """
 
 	def get_available_moves(self, board):
-		return []
+		current_square = board.find_piece(self)
+		available_moves = []
+
+		dx = [-1, 0, 1, 0, -1, -1, 1, 1]
+		dy = [0, -1, 0, 1, -1, 1, -1, 1]
+
+		for i in range(len(dx)):
+			for distance in range(1, 7):
+				next_square = Square(current_square.row + dx[i] * distance, current_square.col + dy[i] * distance)
+
+				if self.is_position_on_board(next_square):
+					piece_attacked = board.get_piece(next_square)
+					if piece_attacked is not None:
+						if self.player != piece_attacked.player:
+							available_moves.append(next_square)
+
+						# Whether the piece is a friendly or enemy one, the bishop cannot continue past neither
+						break
+					# If there is no piece on the next square
+					else:
+						available_moves.append(next_square)
+				# If the next square is not valid (not on the board)
+				else:
+					break
+
+		return available_moves
 
 
 class King(Piece):
