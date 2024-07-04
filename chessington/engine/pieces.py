@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING, List
 if TYPE_CHECKING:
 	from chessington.engine.board import Board
 
+BOARD_SIZE = 8
 
 class Piece(ABC):
 	"""
@@ -30,7 +31,7 @@ class Piece(ABC):
 		board.move_piece(current_square, new_square)
 
 	def is_position_on_board(self, new_square: Square) -> bool:
-		return 0 <= new_square.row < 8 and 0 <= new_square.col < 8
+		return 0 <= new_square.row < BOARD_SIZE and 0 <= new_square.col < BOARD_SIZE
 
 
 class Pawn(Piece):
@@ -192,6 +193,7 @@ class Queen(Piece):
 		current_square = board.find_piece(self)
 		available_moves = []
 
+		# Mix of bishop and rook
 		dx = [-1, 0, 1, 0, -1, -1, 1, 1]
 		dy = [0, -1, 0, 1, -1, 1, -1, 1]
 
@@ -223,4 +225,23 @@ class King(Piece):
     """
 
 	def get_available_moves(self, board):
-		return []
+		current_square = board.find_piece(self)
+		available_moves = []
+
+		# Mix of bishop and rook
+		dx = [-1, 0, 1, 0, -1, -1, 1, 1]
+		dy = [0, -1, 0, 1, -1, 1, -1, 1]
+
+		for i in range(len(dx)):
+			next_square = Square(current_square.row + dx[i], current_square.col + dy[i])
+
+			if self.is_position_on_board(next_square):
+				piece_attacked = board.get_piece(next_square)
+				if piece_attacked is not None:
+					if self.player != piece_attacked.player:
+						available_moves.append(next_square)
+				# If there is no piece on the next square
+				else:
+					available_moves.append(next_square)
+
+		return available_moves
