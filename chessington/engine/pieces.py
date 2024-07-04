@@ -94,7 +94,25 @@ class Knight(Piece):
     """
 
 	def get_available_moves(self, board):
-		return []
+		current_square = board.find_piece(self)
+		available_moves = []
+
+		dx = [-2, -2, -1, -1, 1, 1, 2, 2]
+		dy = [-1, 1, -2, 2, -2, 2, -1, 1]
+
+		for i in range(len(dx)):
+			next_square = Square(current_square.row + dx[i], current_square.col + dy[i])
+
+			if self.is_position_on_board(next_square):
+				piece_attacked = board.get_piece(next_square)
+
+				if piece_attacked is not None:
+					if self.player != piece_attacked.player:
+						available_moves.append(next_square)
+				else:
+					available_moves.append(next_square)
+
+		return available_moves
 
 
 class Bishop(Piece):
