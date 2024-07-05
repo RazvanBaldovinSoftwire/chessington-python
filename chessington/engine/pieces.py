@@ -12,6 +12,15 @@ WHITE_PAWN_ROW = 1
 SHORT_CASTLE_ROOK_COL = 7
 LONG_CASTLE_ROOK_COL = 0
 
+last_piece_moved = None
+last_moved_from = None
+last_moved_to = None
+
+def set_last_move(piece: Piece, moved_from: Square, moved_to: Square):
+	global last_piece_moved, last_moved_from, last_moved_to
+	last_piece_moved = piece
+	last_moved_from = moved_from
+	last_moved_to = moved_to
 
 class Piece(ABC):
 	"""
@@ -33,15 +42,16 @@ class Piece(ABC):
         Move this piece to the given square on the board.
         """
 		current_square = board.find_piece(self)
+		current_piece = board.get_piece(current_square)
 
 		piece_attacked = board.get_piece(new_square)
 		if piece_attacked is None or type(piece_attacked) is not King:
 			board.move_piece(current_square, new_square)
+			set_last_move(current_piece, current_square, new_square)
 		else:
 			print("No one can capture the king!")
 			return
 
-		current_piece = board.get_piece(new_square)
 		if current_piece is not None:
 			if type(current_piece) is King:
 				current_piece.moved = True
@@ -62,6 +72,15 @@ class Piece(ABC):
 			# new rook on the castled position
 			board.set_piece(rook_new_square, Rook(self.player))
 			board.set_piece(rook_current_square, None)
+
+		# Check if pawn did an en passant
+		if type(current_piece) is Pawn and piece_attacked is None and current_square.col != new_square.col:
+			if self.player == Player.WHITE:
+				captured_pawn_square = Square.at(new_square.row - 1, new_square.col)
+			else:
+				captured_pawn_square = Square.at(new_square.row + 1, new_square.col)
+
+			board.set_piece(captured_pawn_square, None)
 
 	def is_position_on_board(self, new_square: Square) -> bool:
 		return 0 <= new_square.row < BOARD_SIZE and 0 <= new_square.col < BOARD_SIZE
@@ -105,13 +124,33 @@ class Pawn(Piece):
 
 		return False
 
+	def check_en_passant(self, board, square: Square) -> bool:
+		if last_piece_moved is None or type(last_piece_moved) is not Pawn:
+			return False
+
+		if last_moved_to is None or last_moved_from is None:
+			return False
+
+		if abs(last_moved_from.row - last_moved_to.row) == 1:
+			return False
+
+		if abs(last_moved_to.col - board.find_piece(self).col) != 1:
+			return False
+
+		if self.player == Player.WHITE:
+			piece_attacked = board.get_piece(Square.at(square.row - 1, square.col))
+		else:
+			piece_attacked = board.get_piece(Square.at(square.row + 1, square.col))
+
+		if piece_attacked is None or piece_attacked.player is self.player:
+			return False
+
+		return True
+
 	def get_available_moves(self, board) -> List[Square]:
 		current_square = board.find_piece(self)
 		available_moves = []
-		direction = 1
-
-		if self.player == Player.BLACK:
-			direction = -1
+		direction = 1 if self.player == Player.WHITE else -1
 
 		square_in_front = Square.at(current_square.row + 1 * direction, current_square.col)
 		two_squares_in_front = Square.at(current_square.row + 2 * direction, current_square.col)
@@ -122,9 +161,9 @@ class Pawn(Piece):
 			available_moves.append(square_in_front)
 		if self.check_two_squares_in_front(board, current_square.row, square_in_front, two_squares_in_front):
 			available_moves.append(two_squares_in_front)
-		if self.check_attack(board, attack_left):
+		if self.check_attack(board, attack_left) or self.check_en_passant(board, attack_left):
 			available_moves.append(attack_left)
-		if self.check_attack(board, attack_right):
+		if self.check_attack(board, attack_right) or self.check_en_passant(board, attack_right):
 			available_moves.append(attack_right)
 
 		return available_moves
@@ -170,7 +209,7 @@ class Bishop(Piece):
 		dy = [-1, 1, -1, 1]
 
 		for i in range(len(dx)):
-			for distance in range(1, 8):
+			for distance in range(1, BOARD_SIZE):
 				next_square = Square(current_square.row + dx[i] * distance, current_square.col + dy[i] * distance)
 
 				if self.is_position_on_board(next_square):
@@ -205,7 +244,7 @@ class Rook(Piece):
 		dy = [0, -1, 0, 1]
 
 		for i in range(len(dx)):
-			for distance in range(1, 8):
+			for distance in range(1, BOARD_SIZE):
 				next_square = Square(current_square.row + dx[i] * distance, current_square.col + dy[i] * distance)
 
 				if self.is_position_on_board(next_square):
@@ -240,7 +279,7 @@ class Queen(Piece):
 		dy = [0, -1, 0, 1, -1, 1, -1, 1]
 
 		for i in range(len(dx)):
-			for distance in range(1, 8):
+			for distance in range(1, BOARD_SIZE):
 				next_square = Square(current_square.row + dx[i] * distance, current_square.col + dy[i] * distance)
 
 				if self.is_position_on_board(next_square):
@@ -277,9 +316,7 @@ class King(Piece):
 		if self.moved is True or rook.moved is True or self.player is not rook.player:
 			return False
 
-		direction = 1
-		if rook_col == 0:
-			direction = -1
+		direction = 1 if rook_col == SHORT_CASTLE_ROOK_COL else -1
 
 		if (board.get_piece(Square.at(current_square.row, current_square.col + 1 * direction)) is not None
 				or board.get_piece(Square.at(current_square.row, current_square.col + 2 * direction)) is not None):

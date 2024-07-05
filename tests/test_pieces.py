@@ -2308,3 +2308,224 @@ class TestPawns:
 		assert type(board.get_piece(castle_square)) is King
 		rook_castle_square = Square.at(7, 3)
 		assert type(board.get_piece(rook_castle_square)) is Rook
+
+	@staticmethod
+	def test_white_pawn_can_en_passant_left():
+		# Arrange
+		board = Board.empty()
+		pawn = Pawn(Player.WHITE)
+		pawn_square = Square.at(3, 4)
+		board.set_piece(pawn_square, pawn)
+
+		enemy = Pawn(Player.BLACK)
+		enemy_square = Square.at(6, 3)
+		board.set_piece(enemy_square, enemy)
+
+		pawn.move_to(board, Square.at(4, 4))
+		enemy.move_to(board, Square.at(4, 3))
+
+		# Act
+		moves = pawn.get_available_moves(board)
+
+		# Assert
+		assert Square.at(5, 3) in moves
+
+	@staticmethod
+	def test_white_pawn_can_en_passant_right():
+		# Arrange
+		board = Board.empty()
+		pawn = Pawn(Player.WHITE)
+		pawn_square = Square.at(3, 4)
+		board.set_piece(pawn_square, pawn)
+
+		enemy = Pawn(Player.BLACK)
+		enemy_square = Square.at(6, 5)
+		board.set_piece(enemy_square, enemy)
+
+		pawn.move_to(board, Square.at(4, 4))
+		enemy.move_to(board, Square.at(4, 5))
+
+		# Act
+		moves = pawn.get_available_moves(board)
+
+		# Assert
+		assert Square.at(5, 5) in moves
+
+	@staticmethod
+	def test_black_pawn_can_en_passant_left():
+		# Arrange
+		board = Board.empty()
+		pawn = Pawn(Player.BLACK)
+		pawn_square = Square.at(4, 4)
+		board.set_piece(pawn_square, pawn)
+
+		enemy = Pawn(Player.WHITE)
+		enemy_square = Square.at(2, 3)
+		board.set_piece(enemy_square, enemy)
+
+		enemy.move_to(board, Square.at(4, 3))
+
+		# Act
+		moves = pawn.get_available_moves(board)
+
+		# Assert
+		assert Square.at(3, 3) in moves
+
+	@staticmethod
+	def test_black_pawn_can_en_passant_right():
+		# Arrange
+		board = Board.empty()
+		pawn = Pawn(Player.BLACK)
+		pawn_square = Square.at(4, 4)
+		board.set_piece(pawn_square, pawn)
+
+		enemy = Pawn(Player.WHITE)
+		enemy_square = Square.at(2, 5)
+		board.set_piece(enemy_square, enemy)
+
+		enemy.move_to(board, Square.at(4, 5))
+
+		# Act
+		moves = pawn.get_available_moves(board)
+
+		# Assert
+		assert Square.at(3, 5) in moves
+
+	@staticmethod
+	def test_white_pawn_cannot_en_passant_because_it_expired():
+		# Arrange
+		board = Board.empty()
+		pawn = Pawn(Player.WHITE)
+		pawn_square = Square.at(3, 4)
+		board.set_piece(pawn_square, pawn)
+
+		enemy = Pawn(Player.BLACK)
+		enemy_square = Square.at(6, 3)
+		board.set_piece(enemy_square, enemy)
+
+		pawn.move_to(board, Square.at(4, 4))
+		enemy.move_to(board, Square.at(4, 3))
+
+		dummy = Pawn(Player.BLACK)
+		dummy_square = Square.at(6, 5)
+		board.set_piece(dummy_square, dummy)
+
+		dummy.move_to(board, Square.at(5, 5))
+
+		# Act
+		moves = pawn.get_available_moves(board)
+
+		# Assert
+		assert Square.at(5, 3) not in moves
+
+	@staticmethod
+	def test_black_pawn_cannot_en_passant_because_it_expired():
+		# Arrange
+		board = Board.empty()
+		pawn = Pawn(Player.BLACK)
+		pawn_square = Square.at(4, 4)
+		board.set_piece(pawn_square, pawn)
+
+		enemy = Pawn(Player.WHITE)
+		enemy_square = Square.at(2, 3)
+		board.set_piece(enemy_square, enemy)
+
+		enemy.move_to(board, Square.at(4, 3))
+
+		dummy = Pawn(Player.WHITE)
+		dummy_square = Square.at(2, 5)
+		board.set_piece(dummy_square, dummy)
+
+		dummy.move_to(board, Square.at(3, 5))
+
+		# Act
+		moves = pawn.get_available_moves(board)
+
+		# Assert
+		assert Square.at(3, 3) not in moves
+
+	@staticmethod
+	def test_white_pawn_en_passant_left_correctly():
+		# Arrange
+		board = Board.empty()
+		pawn = Pawn(Player.WHITE)
+		pawn_square = Square.at(3, 4)
+		board.set_piece(pawn_square, pawn)
+
+		enemy = Pawn(Player.BLACK)
+		enemy_square = Square.at(6, 3)
+		board.set_piece(enemy_square, enemy)
+
+		pawn.move_to(board, Square.at(4, 4))
+		enemy.move_to(board, Square.at(4, 3))
+
+		# Act
+		pawn.move_to(board, Square.at(5, 3))
+
+		# Assert
+		assert type(board.get_piece(Square.at(5, 3))) is Pawn
+		assert board.get_piece(Square.at(4, 3)) is None
+
+	@staticmethod
+	def test_white_pawn_en_passant_right_correctly():
+		# Arrange
+		board = Board.empty()
+		pawn = Pawn(Player.WHITE)
+		pawn_square = Square.at(3, 4)
+		board.set_piece(pawn_square, pawn)
+
+		enemy = Pawn(Player.BLACK)
+		enemy_square = Square.at(6, 5)
+		board.set_piece(enemy_square, enemy)
+
+		pawn.move_to(board, Square.at(4, 4))
+		enemy.move_to(board, Square.at(4, 5))
+
+		# Act
+		pawn.move_to(board, Square.at(5, 5))
+
+		# Assert
+		assert type(board.get_piece(Square.at(5, 5))) is Pawn
+		assert board.get_piece(Square.at(4, 5)) is None
+
+	@staticmethod
+	def test_black_pawn_en_passant_left_correctly():
+		# Arrange
+		board = Board.empty()
+		pawn = Pawn(Player.BLACK)
+		pawn_square = Square.at(4, 4)
+		board.set_piece(pawn_square, pawn)
+
+		enemy = Pawn(Player.WHITE)
+		enemy_square = Square.at(2, 3)
+		board.set_piece(enemy_square, enemy)
+
+		enemy.move_to(board, Square.at(4, 3))
+
+		# Act
+		pawn.move_to(board, Square.at(3, 3))
+
+		# Assert
+		assert type(board.get_piece(Square.at(3, 3))) is Pawn
+		assert board.get_piece(Square.at(4, 3)) is None
+
+	@staticmethod
+	def test_black_pawn_en_passant_right_correctly():
+		# Arrange
+		board = Board.empty()
+		pawn = Pawn(Player.BLACK)
+		pawn_square = Square.at(4, 4)
+		board.set_piece(pawn_square, pawn)
+
+		enemy = Pawn(Player.WHITE)
+		enemy_square = Square.at(2, 5)
+		board.set_piece(enemy_square, enemy)
+
+		enemy.move_to(board, Square.at(4, 5))
+
+		# Act
+		pawn.move_to(board, Square.at(3, 5))
+
+		# Assert
+		assert type(board.get_piece(Square.at(3, 5))) is Pawn
+		assert board.get_piece(Square.at(4, 5)) is None
