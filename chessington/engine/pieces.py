@@ -11,6 +11,8 @@ BLACK_PAWN_ROW = 6
 WHITE_PAWN_ROW = 1
 SHORT_CASTLE_ROOK_COL = 7
 LONG_CASTLE_ROOK_COL = 0
+FIRST_ROW = 0
+LAST_ROW = BOARD_SIZE - 1
 
 last_piece_moved = None
 last_moved_from = None
@@ -90,6 +92,10 @@ class Piece(ABC):
 				captured_pawn_square = Square.at(new_square.row + 1, new_square.col)
 
 			board.set_piece(captured_pawn_square, None)
+
+		# Check for pawn promotion
+		if type(current_piece) is Pawn and (new_square.row == FIRST_ROW or new_square.row == LAST_ROW):
+			board.set_piece(new_square, Queen(self.player))
 
 	def is_position_on_board(self, new_square: Square) -> bool:
 		return 0 <= new_square.row < BOARD_SIZE and 0 <= new_square.col < BOARD_SIZE
