@@ -16,11 +16,20 @@ last_piece_moved = None
 last_moved_from = None
 last_moved_to = None
 
+verifying_square_in_check = False
+
+
 def set_last_move(piece: Piece, moved_from: Square, moved_to: Square):
 	global last_piece_moved, last_moved_from, last_moved_to
 	last_piece_moved = piece
 	last_moved_from = moved_from
 	last_moved_to = moved_to
+
+
+def set_verify_check_status(status):
+	global verifying_square_in_check
+	verifying_square_in_check = status
+
 
 class Piece(ABC):
 	"""
@@ -86,13 +95,21 @@ class Piece(ABC):
 		return 0 <= new_square.row < BOARD_SIZE and 0 <= new_square.col < BOARD_SIZE
 
 	def is_attacked(self, board, square: Square, color) -> bool:
+		if verifying_square_in_check:
+			return False
+
+		set_verify_check_status(True)
+
 		for i in range(0, BOARD_SIZE):
 			for j in range(0, BOARD_SIZE):
 				piece = board.get_piece(Square.at(i, j))
 
 				if piece is not None and piece.player != color:
 					if square in piece.get_available_moves(board):
+						set_verify_check_status(False)
 						return True
+
+		set_verify_check_status(False)
 
 		return False
 

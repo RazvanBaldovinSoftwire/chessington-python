@@ -7,7 +7,6 @@ class TestPawns:
 
 	@staticmethod
 	def test_white_pawns_can_move_up_one_square():
-
 		# Arrange
 		board = Board.empty()
 		pawn = Pawn(Player.WHITE)
@@ -22,7 +21,6 @@ class TestPawns:
 
 	@staticmethod
 	def test_black_pawns_can_move_down_one_square():
-
 		# Arrange
 		board = Board.empty()
 		pawn = Pawn(Player.BLACK)
@@ -37,7 +35,6 @@ class TestPawns:
 
 	@staticmethod
 	def test_white_pawn_can_move_up_two_squares_if_not_moved():
-
 		# Arrange
 		board = Board.empty()
 		pawn = Pawn(Player.WHITE)
@@ -52,7 +49,6 @@ class TestPawns:
 
 	@staticmethod
 	def test_black_pawn_can_move_down_two_squares_if_not_moved():
-
 		# Arrange
 		board = Board.empty()
 		pawn = Pawn(Player.BLACK)
@@ -67,7 +63,6 @@ class TestPawns:
 
 	@staticmethod
 	def test_white_pawn_cannot_move_up_two_squares_if_already_moved():
-
 		# Arrange
 		board = Board.empty()
 		pawn = Pawn(Player.WHITE)
@@ -85,7 +80,6 @@ class TestPawns:
 
 	@staticmethod
 	def test_black_pawn_cannot_move_down_two_squares_if_already_moved():
-
 		# Arrange
 		board = Board.empty()
 		pawn = Pawn(Player.BLACK)
@@ -103,7 +97,6 @@ class TestPawns:
 
 	@staticmethod
 	def test_white_pawn_cannot_move_if_piece_in_front():
-
 		# Arrange
 		board = Board.empty()
 		pawn = Pawn(Player.WHITE)
@@ -122,7 +115,6 @@ class TestPawns:
 
 	@staticmethod
 	def test_black_pawn_cannot_move_if_piece_in_front():
-
 		# Arrange
 		board = Board.empty()
 		pawn = Pawn(Player.BLACK)
@@ -141,7 +133,6 @@ class TestPawns:
 
 	@staticmethod
 	def test_white_pawn_cannot_move_two_squares_if_piece_two_in_front():
-
 		# Arrange
 		board = Board.empty()
 		pawn = Pawn(Player.WHITE)
@@ -160,7 +151,6 @@ class TestPawns:
 
 	@staticmethod
 	def test_black_pawn_cannot_move_two_squares_if_piece_two_in_front():
-
 		# Arrange
 		board = Board.empty()
 		pawn = Pawn(Player.BLACK)
@@ -179,7 +169,6 @@ class TestPawns:
 
 	@staticmethod
 	def test_white_pawn_cannot_move_two_squares_if_piece_one_in_front():
-
 		# Arrange
 		board = Board.empty()
 		pawn = Pawn(Player.WHITE)
@@ -198,7 +187,6 @@ class TestPawns:
 
 	@staticmethod
 	def test_black_pawn_cannot_move_two_squares_if_piece_one_in_front():
-
 		# Arrange
 		board = Board.empty()
 		pawn = Pawn(Player.BLACK)
@@ -217,7 +205,6 @@ class TestPawns:
 
 	@staticmethod
 	def test_white_pawn_cannot_move_at_top_of_board():
-
 		# Arrange
 		board = Board.empty()
 		pawn = Pawn(Player.WHITE)
@@ -232,7 +219,6 @@ class TestPawns:
 
 	@staticmethod
 	def test_black_pawn_cannot_move_at_bottom_of_board():
-
 		# Arrange
 		board = Board.empty()
 		pawn = Pawn(Player.BLACK)
@@ -247,7 +233,6 @@ class TestPawns:
 
 	@staticmethod
 	def test_white_pawns_can_capture_diagonally():
-
 		# Arrange
 		board = Board.empty()
 		pawn = Pawn(Player.WHITE)
@@ -271,7 +256,6 @@ class TestPawns:
 
 	@staticmethod
 	def test_black_pawns_can_capture_diagonally():
-
 		# Arrange
 		board = Board.empty()
 		pawn = Pawn(Player.BLACK)
@@ -295,7 +279,6 @@ class TestPawns:
 
 	@staticmethod
 	def test_white_pawns_cannot_move_diagonally_except_to_capture():
-
 		# Arrange
 		board = Board.empty()
 		pawn = Pawn(Player.WHITE)
@@ -315,7 +298,6 @@ class TestPawns:
 
 	@staticmethod
 	def test_black_pawns_cannot_move_diagonally_except_to_capture():
-
 		# Arrange
 		board = Board.empty()
 		pawn = Pawn(Player.BLACK)
@@ -335,7 +317,6 @@ class TestPawns:
 
 	@staticmethod
 	def test_white_knight_all_moves():
-
 		# Arrange
 		board = Board.empty()
 		knight = Knight(Player.WHITE)
@@ -357,7 +338,6 @@ class TestPawns:
 
 	@staticmethod
 	def test_black_knight_all_moves():
-
 		# Arrange
 		board = Board.empty()
 		knight = Knight(Player.BLACK)
@@ -379,7 +359,6 @@ class TestPawns:
 
 	@staticmethod
 	def test_white_knight_capture_enemy():
-
 		# Arrange
 		board = Board.empty()
 		knight = Knight(Player.WHITE)
@@ -646,19 +625,19 @@ class TestPawns:
 		friendly_square1 = Square.at(2, 3)
 		board.set_piece(friendly_square1, friendly)
 
-		enemy_square1 = Square.at(2,4)
+		enemy_square1 = Square.at(2, 4)
 		board.set_piece(enemy_square1, enemy)
 
 		friendly_square2 = Square.at(2, 5)
 		board.set_piece(friendly_square2, friendly)
 
-		enemy_square2 = Square.at(3,3)
+		enemy_square2 = Square.at(3, 3)
 		board.set_piece(enemy_square2, enemy)
 
 		friendly_square3 = Square.at(3, 5)
 		board.set_piece(friendly_square3, friendly)
 
-		enemy_square3 = Square.at(4,3)
+		enemy_square3 = Square.at(4, 3)
 		board.set_piece(enemy_square3, enemy)
 
 		friendly_square4 = Square.at(4, 4)
@@ -1015,7 +994,7 @@ class TestPawns:
 		enemy_square1 = Square.at(3, 2)
 		board.set_piece(enemy_square1, enemy)
 
-		enemy_square2 = Square.at(3,  7)
+		enemy_square2 = Square.at(3, 7)
 		board.set_piece(enemy_square2, enemy)
 
 		enemy_square3 = Square.at(2, 4)
@@ -1285,7 +1264,6 @@ class TestPawns:
 
 		enemy_square8 = Square.at(6, 7)
 		board.set_piece(enemy_square8, enemy)
-
 
 		# Act
 		moves = queen.get_available_moves(board)
